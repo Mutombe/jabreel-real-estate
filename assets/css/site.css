@@ -819,7 +819,6 @@ em { font-style: italic; }
     linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / calc(var(--grid) * 5) calc(var(--grid) * 5),
     linear-gradient(var(--grid-minor) 1px, transparent 1px) 0 0 / var(--grid) var(--grid),
     linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px) 0 0 / var(--grid) var(--grid);
-  --rule: rgba(22, 21, 19, .06);
 }
 
 /* drafting grid: a fade of the ground colour sits on top, so the grid clears photos and copy */
@@ -859,15 +858,6 @@ em { font-style: italic; }
 }
 .acard--ink::before { opacity: .12; }
 
-/* column rules: hairlines on the four-column grid of light sections */
-.section > .wrap { position: relative; isolation: isolate; }
-.section > .wrap::before {
-  content: ""; position: absolute; z-index: -1; pointer-events: none;
-  top: 0; bottom: 0; left: var(--gutter); right: var(--gutter);
-  background: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 25%);
-  border-right: 1px solid var(--rule);
-  -webkit-mask: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); mask: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
-}
 
 @media (max-width: 1100px) {
   .services { grid-template-columns: repeat(2, 1fr); }
@@ -880,7 +870,6 @@ em { font-style: italic; }
   .svc-detail img { width: 120px; }
 }
 @media (max-width: 900px) {
-  .section > .wrap::before { display: none; }
   :root { --grid: 40px; }
   .hero-nav { grid-template-columns: auto 1fr auto auto; gap: 6px; }
   .hero-nav a:not(.hero-nav__mark):not(.nav-pill) { display: none; }

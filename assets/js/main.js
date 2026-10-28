@@ -178,11 +178,24 @@
 
   /* ---------- touch: mirror hover on cards crossing the middle ---------- */
   const inviewEls = touch ? $$(".svc, .acard, .rail__item, .lcard, .feat, .fcard, .person, .gallery a, .ccard, .unit, .mapsec__list a, .step, .next, .near div, .value") : [];
-  const onScrollInview = () => inviewEls.forEach((el) => {
-    const r = el.getBoundingClientRect();
-    const mid = innerHeight / 2;
-    el.classList.toggle("is-inview", r.top < mid + innerHeight * 0.12 && r.bottom > mid - innerHeight * 0.12);
-  });
+  // Only what sits on the screen's vertical centre line lights up: the closest row to the line,
+  // and within that row the card under the horizontal centre when there is one (e.g. the rail).
+  const onScrollInview = () => {
+    if (!inviewEls.length) return;
+    const my = innerHeight / 2, mx = innerWidth / 2, reach = innerHeight * 0.18;
+    let best = Infinity;
+    const rows = inviewEls.map((el) => {
+      const r = el.getBoundingClientRect();
+      const onX = r.right > 0 && r.left < innerWidth && r.width > 0;
+      const d = !onX ? Infinity : r.top <= my && r.bottom >= my ? 0 : Math.min(Math.abs(r.top - my), Math.abs(r.bottom - my));
+      if (d < best) best = d;
+      return { el, r, d };
+    });
+    let on = best <= reach ? rows.filter((o) => o.d <= best + 2) : [];
+    const atX = on.filter((o) => o.r.left <= mx && o.r.right >= mx);
+    if (atX.length) on = atX;
+    inviewEls.forEach((el) => el.classList.toggle("is-inview", on.some((o) => o.el === el)));
+  };
 
   let ticking = false;
   const onScroll = () => {
@@ -192,6 +205,7 @@
   };
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("resize", onScroll);
+  if (touch) $$(".rail__track").forEach((t) => t.addEventListener("scroll", onScroll, { passive: true }));
   onScroll();
 
   /* ---------- magnetic buttons ---------- */
