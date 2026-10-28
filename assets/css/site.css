@@ -798,6 +798,72 @@ em { font-style: italic; }
 .is-in .line > span, .line.is-in > span { transform: none; }
 
 /* ---- 21. Responsive ------------------------------------------------------ */
+/* ---- 20. Texture -----------------------------------------------------------
+   Three patterns, each borrowed from the drawings a property is made of:
+   - drafting grid on dark grounds (the architect's plan sheet)
+   - survey-peg dots on light cards (stands pegged out on a plot)
+   - diagonal hatch on tinted tiles (the hatch for built area on a site plan)
+   All sit at 4-10% and fade out before they meet photography or copy. */
+@property --peg { syntax: "<color>"; inherits: true; initial-value: rgba(101, 88, 74, .5); }
+:root {
+  --grid-minor: rgba(217, 199, 174, .055);
+  --grid-major: rgba(217, 199, 174, .09);
+  --grid: 56px;
+  --pat-grid:
+    linear-gradient(var(--grid-major) 1px, transparent 1px) 0 0 / calc(var(--grid) * 5) calc(var(--grid) * 5),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / calc(var(--grid) * 5) calc(var(--grid) * 5),
+    linear-gradient(var(--grid-minor) 1px, transparent 1px) 0 0 / var(--grid) var(--grid),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px) 0 0 / var(--grid) var(--grid);
+  --rule: rgba(22, 21, 19, .06);
+}
+
+/* drafting grid: a fade of the ground colour sits on top, so the grid clears photos and copy */
+.feature { background: radial-gradient(70% 80% at 72% 55%, var(--ink-2) 35%, transparent 80%), var(--pat-grid), var(--ink-2); }
+.panel--dark { background: radial-gradient(90% 90% at 75% 50%, var(--ink-2) 30%, transparent 85%), var(--pat-grid), var(--ink-2); }
+.mapsec { background: radial-gradient(60% 70% at 50% 62%, var(--ink) 40%, transparent 90%), var(--pat-grid), var(--ink); }
+.footer { background: linear-gradient(180deg, transparent, var(--ink) 75%), var(--pat-grid), var(--ink); }
+.menu { background: radial-gradient(80% 70% at 30% 50%, var(--ink) 30%, transparent 90%), var(--pat-grid), var(--ink); }
+
+/* survey pegs: corner fields on light cards */
+.svc::after, .value::before, .near div::before, .panel:not(.panel--dark)::before, .person::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  background: radial-gradient(circle, var(--peg) 1.2px, transparent 1.8px) 0 0 / 14px 14px;
+  opacity: .34;
+}
+/* What we do: pegs fill the top-right corner and turn champagne when the card goes dark */
+.svc::after {
+  top: 0; right: 0; width: 62%; height: 58%;
+  -webkit-mask: radial-gradient(100% 100% at 100% 0, #000 10%, transparent 72%); mask: radial-gradient(100% 100% at 100% 0, #000 10%, transparent 72%);
+  transition: --peg .6s var(--ease), opacity .6s var(--ease);
+}
+.svc:hover, .svc.is-inview { --peg: var(--champagne); }
+.svc:hover::after, .svc.is-inview::after { opacity: .3; }
+.value, .near div, .panel, .person { position: relative; isolation: isolate; }
+.value::before { top: 0; right: 0; width: 55%; height: 60%; -webkit-mask: radial-gradient(100% 100% at 100% 0, #000, transparent 70%); mask: radial-gradient(100% 100% at 100% 0, #000, transparent 70%); }
+.near div::before { top: 0; right: 0; width: 70%; height: 70%; background-size: 11px 11px; -webkit-mask: radial-gradient(100% 100% at 100% 0, #000, transparent 70%); mask: radial-gradient(100% 100% at 100% 0, #000, transparent 70%); }
+.panel:not(.panel--dark)::before { top: 0; right: 0; width: 40%; height: 70%; border-radius: inherit; -webkit-mask: radial-gradient(100% 100% at 100% 0, #000, transparent 65%); mask: radial-gradient(100% 100% at 100% 0, #000, transparent 65%); }
+/* team: the monogram stands on its own pegged plot */
+.person::before { top: 0; left: 0; width: 190px; height: 190px; -webkit-mask: radial-gradient(closest-side, #000 30%, transparent); mask: radial-gradient(closest-side, #000 30%, transparent); opacity: .36; }
+
+/* site-plan hatch: bottom-left of the tinted tiles, away from the estate art on the right */
+.acard::before {
+  content: ""; position: absolute; z-index: -1; left: 0; bottom: 0; width: 60%; height: 65%; pointer-events: none;
+  background: repeating-linear-gradient(135deg, var(--dot) 0 1px, transparent 1px 10px);
+  opacity: .1;
+  -webkit-mask: radial-gradient(100% 100% at 0 100%, #000 5%, transparent 70%); mask: radial-gradient(100% 100% at 0 100%, #000 5%, transparent 70%);
+}
+.acard--ink::before { opacity: .12; }
+
+/* column rules: hairlines on the four-column grid of light sections */
+.section > .wrap { position: relative; isolation: isolate; }
+.section > .wrap::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  top: 0; bottom: 0; left: var(--gutter); right: var(--gutter);
+  background: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 25%);
+  border-right: 1px solid var(--rule);
+  -webkit-mask: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); mask: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+}
+
 @media (max-width: 1100px) {
   .services { grid-template-columns: repeat(2, 1fr); }
   .team { grid-template-columns: repeat(2, 1fr); }
@@ -809,6 +875,8 @@ em { font-style: italic; }
   .svc-detail img { width: 120px; }
 }
 @media (max-width: 900px) {
+  .section > .wrap::before { display: none; }
+  :root { --grid: 40px; }
   .hero-nav { grid-template-columns: auto 1fr auto auto; gap: 6px; }
   .hero-nav a:not(.hero-nav__mark):not(.nav-pill) { display: none; }
   .hero-nav .nav-pill { grid-column: 3; }
@@ -856,8 +924,12 @@ em { font-style: italic; }
   .svc { min-height: 0; }
   .svc__obj { width: 104px; height: 104px; }
   .team { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .person { min-height: 240px; padding: 20px; }
-  .person__mono { width: 70px; font-size: 1.6rem; }
+  .team { grid-template-columns: 1fr; }
+  .person { min-height: 0; padding: 18px; display: grid; grid-template-columns: 64px 1fr; column-gap: 18px; align-items: center; }
+  .person__mono { width: 64px; font-size: 1.5rem; grid-row: span 2; }
+  .person h3 { margin-top: 0; padding-top: 0; align-self: end; }
+  .person p { align-self: start; }
+  .person::before { width: 120px; height: 100%; }
   .features { grid-template-columns: 1fr; }
   .form { grid-template-columns: 1fr; }
   .steps { grid-template-columns: 1fr 1fr; }
