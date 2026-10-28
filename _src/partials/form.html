@@ -1,0 +1,23 @@
+<form class="form" data-enquiry="{{enquiry}}" novalidate data-reveal>
+  <div class="field"><input id="f-name" name="Name" type="text" placeholder=" " autocomplete="name" required><label for="f-name">Full name</label></div>
+  <div class="field"><input id="f-phone" name="Phone" type="tel" placeholder=" " autocomplete="tel" required><label for="f-phone">Phone / WhatsApp</label></div>
+  <div class="field full"><input id="f-email" name="Email" type="email" placeholder=" " autocomplete="email"><label for="f-email">Email (optional)</label></div>
+  <div class="field full">
+    <select id="f-interest" name="Interested in">
+      <option>{{enquiry}}</option>
+      <option>1051 on Crowhill, Borrowdale</option>
+      <option>Ruparara Estate, Nyanga</option>
+      <option>Clipsham Views, Masvingo</option>
+      <option>Amberwood Gardens, Bulawayo</option>
+      <option>Selling or letting my property</option>
+      <option>A valuation</option>
+      <option>Something else</option>
+    </select><label for="f-interest">I'm interested in</label>
+  </div>
+  <div class="field full"><textarea id="f-msg" name="Message" placeholder=" " rows="4"></textarea><label for="f-msg">Anything we should know?</label></div>
+  <div class="form__actions full">
+    <button class="btn btn--dark" type="submit" data-magnetic>Send by email</button>
+    <button class="btn btn--ghost" type="button" data-wa>{{> icon-whatsapp}} Send on WhatsApp</button>
+  </div>
+  <p class="form__status full" role="status" aria-live="polite"></p>
+</form>

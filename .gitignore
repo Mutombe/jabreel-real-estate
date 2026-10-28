@@ -1,0 +1,5 @@
+# raw downloads used only to regenerate assets (kept locally)
+_src/raw/*/
+__pycache__/
+.DS_Store
+Thumbs.db
