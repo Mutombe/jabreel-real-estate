@@ -937,8 +937,12 @@ em { font-style: italic; }
   .svc-detail { grid-template-columns: 1fr; }
   .svc-detail > :last-child { grid-column: auto; }
   .acard { min-height: 470px; }
-  .acard__art { top: 0; bottom: auto; width: 64%; height: 56%; }
-  .acard__art svg { object-position: right top; }
+  /* the estate art runs the full card and sinks behind the copy instead of stopping at a box edge */
+  .acard__art {
+    inset: 0; width: auto;
+    -webkit-mask: linear-gradient(180deg, #000 34%, rgba(0,0,0,.42) 58%, rgba(0,0,0,.2) 78%, rgba(0,0,0,.14));
+            mask: linear-gradient(180deg, #000 34%, rgba(0,0,0,.42) 58%, rgba(0,0,0,.2) 78%, rgba(0,0,0,.14));
+  }
   .lightbox { padding: 70px 12px; }
   .lightbox__nav { top: auto; bottom: 14px; }
   .wordmark { margin-top: 48px; }
